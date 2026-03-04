@@ -9,7 +9,7 @@ import type { ICachePlugin, TokenCacheContext } from "@azure/msal-node";
 export class TokenStore implements ICachePlugin {
   private cachePath: string;
   private keytar: typeof import("keytar") | null = null;
-  private static readonly SERVICE_NAME = "mcp-ms365-mail";
+  private static readonly SERVICE_NAME = "oss-mcp-outlook";
   private static readonly ACCOUNT_NAME = "token-cache";
 
   constructor(cachePath: string) {

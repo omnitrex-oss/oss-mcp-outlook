@@ -1,11 +1,26 @@
 {
-  "name": "oss-mcp-ms365-mail",
+  "name": "oss-mcp-outlook",
   "version": "0.1.0",
-  "description": "MCP server for Microsoft 365 Mail — draft, send, and manage Outlook email from Claude Code",
+  "description": "MCP server for Microsoft 365 Outlook — read, draft, send, and manage email and calendar via AI assistants",
   "license": "MIT",
+  "author": "dieudonne84",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omnitrex-oss/oss-mcp-outlook.git"
+  },
+  "homepage": "https://github.com/omnitrex-oss/oss-mcp-outlook",
+  "bugs": "https://github.com/omnitrex-oss/oss-mcp-outlook/issues",
+  "keywords": [
+    "mcp",
+    "outlook",
+    "microsoft-365",
+    "email",
+    "calendar",
+    "graph-api"
+  ],
   "type": "module",
   "bin": {
-    "mcp-ms365-mail": "./dist/index.js"
+    "oss-mcp-outlook": "./dist/index.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

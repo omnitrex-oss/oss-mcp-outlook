@@ -1,10 +1,10 @@
-# oss-mcp-ms365-mail
+# oss-mcp-outlook
 
-MCP server for Microsoft 365 Mail — draft, send, and manage Outlook email directly from Claude Code.
+MCP server for Microsoft 365 Outlook — read, draft, send, and manage email and calendar via AI assistants.
 
 ## Features
 
-- **10 mail tools**: list, read, search, draft, update, send, reply, forward, attach, list attachments
+- **17 tools**: 10 mail + 5 calendar + 2 template tools
 - **Draft-before-send**: every send creates a draft first, requires explicit confirmation
 - **External recipient warnings**: alerts when sending outside configured internal domains
 - **Audit log**: structured JSON lines at `~/.mcp-outlook/audit/` (never logs email body content)
@@ -80,12 +80,12 @@ Your app should now have:
 ### 1. Build from source
 
 ```bash
-git clone https://github.com/omnitrex-oss/oss-mcp-ms365-mail.git && cd oss-mcp-ms365-mail
+git clone https://github.com/omnitrex-oss/oss-mcp-outlook.git && cd oss-mcp-outlook
 npm install
 npm run build
 ```
 
-### 2. Add to Claude Code
+### 2. Add to your MCP client
 
 Replace `<your-client-id>` and `<your-tenant-id>` with the values from Step 2 above.
 
@@ -93,7 +93,7 @@ Replace `<your-client-id>` and `<your-tenant-id>` with the values from Step 2 ab
 claude mcp add --transport stdio \
   --env MS365_CLIENT_ID=<your-client-id> \
   --env MS365_TENANT_ID=<your-tenant-id> \
-  mcp-ms365-mail -- node /path/to/mcp-outlook/dist/index.js
+  oss-mcp-outlook -- node /path/to/oss-mcp-outlook/dist/index.js
 ```
 
 Optionally configure internal domain warnings (e.g., to flag emails leaving your org):
@@ -102,8 +102,8 @@ Optionally configure internal domain warnings (e.g., to flag emails leaving your
 claude mcp add --transport stdio \
   --env MS365_CLIENT_ID=<your-client-id> \
   --env MS365_TENANT_ID=<your-tenant-id> \
-  --env MS365_INTERNAL_DOMAINS=omnitrex.eu \
-  mcp-ms365-mail -- node /path/to/mcp-outlook/dist/index.js
+  --env MS365_INTERNAL_DOMAINS=yourcompany.com \
+  oss-mcp-outlook -- node /path/to/oss-mcp-outlook/dist/index.js
 ```
 
 ### 3. First use — device code authentication
@@ -113,9 +113,9 @@ The first time you use any mail tool, the server triggers device code auth:
 1. Claude will show a message like: *"To sign in, use a web browser to open https://microsoft.com/devicelogin and enter the code XXXXXXXX"*
 2. Open that URL in any browser
 3. Paste the code
-4. Sign in with your M365 account (e.g., `maxim@omnitrex.eu`)
+4. Sign in with your M365 account (e.g., `you@yourcompany.com`)
 5. Click **Accept** when prompted for permissions
-6. Return to Claude Code — the tool will complete automatically
+6. Return to your MCP client — the tool will complete automatically
 
 After first auth, tokens are cached in your OS keychain (or `~/.mcp-outlook/token-cache.json` as fallback) and refreshed silently. You won't need to authenticate again unless you revoke access or tokens expire after extended inactivity.
 
@@ -127,7 +127,7 @@ All via environment variables:
 |----------|----------|---------|-------------|
 | `MS365_CLIENT_ID` | Yes | — | Azure app client ID |
 | `MS365_TENANT_ID` | Yes | — | Azure directory tenant ID |
-| `MS365_INTERNAL_DOMAINS` | No | — | Comma-separated internal domains (e.g., `omnitrex.eu,company.com`) |
+| `MS365_INTERNAL_DOMAINS` | No | — | Comma-separated internal domains (e.g., `yourcompany.com,partner.com`) |
 | `MS365_MAX_RECIPIENTS` | No | `100` | Max recipients per email (blocks above this) |
 | `MS365_TOKEN_CACHE_PATH` | No | `~/.mcp-outlook/token-cache.json` | Token cache file location |
 | `MS365_AUDIT_PATH` | No | `~/.mcp-outlook/audit` | Audit log directory |
@@ -146,6 +146,13 @@ All via environment variables:
 | `mail_forward` | Write | Forward message (draft-first pattern) |
 | `mail_attach` | Write | Attach local file to draft (<3MB direct, 3-150MB chunked) |
 | `mail_attachment_list` | Read | List attachments on a message |
+| `calendar_list` | Read | List calendar events with date range filter |
+| `calendar_read` | Read | Read full details of a calendar event |
+| `calendar_create` | Write | Create a new calendar event |
+| `calendar_update` | Write | Update an existing calendar event |
+| `calendar_delete` | Write | Delete/cancel a calendar event |
+| `mail_template_list` | Read | List available email templates |
+| `mail_template_apply` | Write | Apply a template and create a draft |
 
 ## Safety
 
@@ -154,6 +161,10 @@ All via environment variables:
 - **Max recipient limit**: warns >20, blocks above `MS365_MAX_RECIPIENTS`.
 - **Audit trail**: every action logged to `~/.mcp-outlook/audit/YYYY-MM.jsonl`. Never logs email body content.
 - **No plaintext tokens**: stored in OS keychain or file with restricted permissions.
+
+## Related
+
+- [oss-mcp-onedrive](https://github.com/omnitrex-oss/oss-mcp-onedrive) — MCP server for OneDrive and SharePoint
 
 ## Development
 
