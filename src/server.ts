@@ -20,7 +20,6 @@ import { registerCalendarUpdate } from "./tools/calendar-update.js";
 import { registerCalendarDelete } from "./tools/calendar-delete.js";
 import { registerMailTemplateList } from "./tools/mail-template-list.js";
 import { registerMailTemplateApply } from "./tools/mail-template-apply.js";
-import { registerCrmLogActivity } from "./tools/crm-log-activity.js";
 
 export async function createServer(): Promise<McpServer> {
   const config: AppConfig = loadConfig();
@@ -67,9 +66,6 @@ export async function createServer(): Promise<McpServer> {
   // Register template tools (2)
   registerMailTemplateList(server);
   registerMailTemplateApply(server, graph, audit);
-
-  // Register CRM bridge (1)
-  registerCrmLogActivity(server, audit);
 
   return server;
 }
